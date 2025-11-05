@@ -4,20 +4,31 @@ import 'package:github_app/feature/home/controller/home_controller.dart';
 import 'package:github_app/feature/repo_details/presentation/repo_details_screen.dart';
 import 'package:github_app/theme/them_controller.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final String username;
   const HomeScreen({super.key, required this.username});
 
   @override
-  Widget build(BuildContext context) {
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    final HomeController controller = Get.put(HomeController()..username = username);
+class _HomeScreenState extends State<HomeScreen> {
+
+   late final HomeController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(HomeController(username: widget.username));
+  }
+  @override
+  Widget build(BuildContext context) {
    
     final ThemeController themeController = Get.find();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('@$username Repos'),
+        title: Text('@${widget.username} Repos'),
         actions: [
           Obx(() => IconButton(
                 icon: Icon(controller.isGridView.value ? Icons.list : Icons.grid_view),

@@ -61,10 +61,10 @@ import 'package:github_app/theme/them_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
-  diSetup();
-  DioSingleton.instance.create();
-
+  
+ await GetStorage.init();
+    diSetup();
+    DioSingleton.instance.create();
   runApp(const MyApp());
 }
 

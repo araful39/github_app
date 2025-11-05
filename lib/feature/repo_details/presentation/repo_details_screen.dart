@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:github_app/feature/home/model/repo_response.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,7 +32,10 @@ class RepoDetailScreen extends StatelessWidget {
             ElevatedButton.icon(
               icon: const Icon(Icons.open_in_browser),
               label: const Text('Open in GitHub'),
-              onPressed: () => _launchURL(repo.htmlUrl),
+              onPressed: () {
+                log('Opening ${repo.htmlUrl}');
+                _launchURL(repo.htmlUrl, context);
+              },
             ),
           ],
         ),
@@ -43,7 +48,13 @@ class RepoDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          SizedBox(width: 120, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold))),
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           Expanded(child: Text(value)),
         ],
       ),
@@ -53,11 +64,21 @@ class RepoDetailScreen extends StatelessWidget {
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
   }
-
-  void _launchURL(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+void _launchURL(String url, BuildContext context) async {
+  final uri = Uri.parse(url);
+  try {
+    final launched = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!launched) {
+      // Fallback or show message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch $url')),
+      );
     }
+  } catch (e) {
+    print('Error launching URL: $e');
   }
+}
 }

@@ -83,9 +83,9 @@ import 'package:github_app/theme/them_controller.dart';
 class UserNameScreen extends StatelessWidget {
   UserNameScreen({super.key});
 
-  final UserController controller = Get.find<UserController>();
-  final TextEditingController usernameController = TextEditingController();
-  final ThemeController themeController = Get.find<ThemeController>();
+ final controller = Get.find<UserController>();
+    final themeController = Get.find<ThemeController>();
+    final textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class UserNameScreen extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              controller: usernameController,
+              controller: textController,
               decoration: const InputDecoration(
                 labelText: 'Enter GitHub username',
                 border: OutlineInputBorder(),
@@ -119,7 +119,7 @@ class UserNameScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                final username = usernameController.text.trim();
+                final username = textController.text.trim();
                 if (username.isNotEmpty) {
                   controller.fetchUser(username).then((_) {
                     if (controller.user.value != null) {
@@ -141,41 +141,45 @@ class UserNameScreen extends StatelessWidget {
                 );
               } else if (controller.user.value != null) {
                 final user = controller.user.value!;
-                return Column(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: user.avatarUrl ?? '',
-                      width: 100,
-                      height: 100,
-                      placeholder: (_, __) => const CircularProgressIndicator(),
-                      errorWidget: (_, __, ___) =>
-                          const Icon(Icons.person, size: 100),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      user.login ?? '',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (user.name != null) Text(user.name!),
-
-                 
-                    if (user.bio != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text(user.bio ?? ""),
-                      ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                return Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
                       children: [
-                        _infoChip('Repos', user.publicRepos),
-                        _infoChip('Followers', user.followers),
-                        _infoChip('Following', user.following),
+                        CachedNetworkImage(
+                          imageUrl: user.avatarUrl ?? '',
+                          width: 100,
+                          height: 100,
+                          placeholder: (_, __) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (_, __, ___) =>
+                              const Icon(Icons.person, size: 100),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          user.login ?? '',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (user.name != null) Text(user.name!),
+
+                        if (user.bio != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(user.bio ?? ""),
+                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _infoChip('Repos', user.publicRepos),
+                            _infoChip('Followers', user.followers),
+                            _infoChip('Following', user.following),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 );
               } else {
                 return const Text('Enter a username to fetch data');
@@ -189,8 +193,10 @@ class UserNameScreen extends StatelessWidget {
 
   Widget _infoChip(String label, int? count) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Chip(label: Text('$label: ${count ?? 0}')),
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Chip(
+        label: Text('$label: ${count ?? 0}', style: TextStyle(fontSize: 12)),
+      ),
     );
   }
 }
