@@ -1,7 +1,7 @@
 # github_app
 # vidio link
 https://youtube.com/shorts/ALg3wF8bNi8?si=hJX3siheGvgm5Hk0
-#apk
+# apk link
 https://drive.google.com/file/d/1M3R5NAzt50fG3GFFXW8aEblBjDTbNdkT/view?usp=drive_link
 # images
 ![Screenshot_20251105-215032](https://github.com/user-attachments/assets/b985f996-f42e-48f9-b9be-74ccf244ef0c)
